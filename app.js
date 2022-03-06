@@ -5,7 +5,7 @@ const dotenv = require('dotenv');
 const wordRouter = require('./routes/wordRouter');
 const gameRouter = require('./routes/gameRouter');
 const authRouter = require('./routes/authRouter');
-dotenv.config({ path: "./.env" })
+dotenv.config()
 const port = process.env.PORT || "8000";
 
 
