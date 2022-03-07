@@ -26,7 +26,7 @@ module.exports.index = async (req, res) => {
         });
         return await redisCli.set(key, JSON.stringify(words[index]));
     }
-    return res.status(200).send({ isSuccess: true, data: JSON.parse(word)});
+    return res.status(200).json({ isSuccess: true, data: JSON.parse(word)});
 }
 
 module.exports.setWords = async (req, res) => { 
