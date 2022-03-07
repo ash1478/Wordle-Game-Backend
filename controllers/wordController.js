@@ -21,15 +21,15 @@ module.exports.index = async (req, res) => {
         const words = await Word.find({ isUsed: false });
         if (!words) return res.status(404).send("No words");
         const index = getRandomInt(words.length);
-        let currWord = cryptoJS.AES.encrypt(JSON.stringify(words[index]), 'ashwin').toString();
+        let currWord = words[index];
         res.status(200).send({ isSuccess: true, data: currWord});
         await Word.findByIdAndUpdate(mongoose.Types.ObjectId(words[index]._id), {
                 isUsed: true
         });
-        return await redisCli.set(key, currWord);
+        return await redisCli.set(key, JSON.stringify(currWord));
     }
-    console.log({ isSuccess: true, data: word });
-    return res.status(200).json({ isSuccess: true, data: word});
+    console.log({ isSuccess: true, data: JSON.parse(word) });
+    return res.status(200).json({ isSuccess: true, data: JSON.parse(word)});
 }
 
 module.exports.setWords = async (req, res) => { 
