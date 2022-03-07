@@ -2,6 +2,7 @@ const express = require('express');
 const mongoose = require('mongoose');
 const app = express();
 const dotenv = require('dotenv');
+const cors = require('cors');
 const wordRouter = require('./routes/wordRouter');
 const gameRouter = require('./routes/gameRouter');
 const authRouter = require('./routes/authRouter');
@@ -19,7 +20,7 @@ mongoose.connect(process.env.MONGO_URI, {
     .catch(err => console.log(err))
 
 
-
+app.use(cors())    
 app.use(express.json())
 app.use("/word", wordRouter);
 app.use("/game", gameRouter);
