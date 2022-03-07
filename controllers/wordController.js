@@ -1,5 +1,6 @@
 const { json } = require("express/lib/response");
 const Redis = require("ioredis");
+const cryptoJS = require('crypto-js');
 const { default: mongoose } = require("mongoose");
 const Word = require("../model/wordSchema");
 const redisCli = new Redis({
@@ -20,14 +21,15 @@ module.exports.index = async (req, res) => {
         const words = await Word.find({ isUsed: false });
         if (!words) return res.status(404).send("No words");
         const index = getRandomInt(words.length);
-        res.status(200).send({ isSuccess: true, data: words[index]});
+        let currWord = cryptoJS.AES.encrypt(JSON.stringify(words[index]), 'ashwin').toString();
+        res.status(200).send({ isSuccess: true, data: currWord});
         await Word.findByIdAndUpdate(mongoose.Types.ObjectId(words[index]._id), {
                 isUsed: true
         });
-        return await redisCli.set(key, JSON.stringify(words[index]));
+        return await redisCli.set(key, currWord);
     }
-    console.log({ isSuccess: true, data: JSON.parse(word) });
-    return res.status(200).json({ isSuccess: true, data: JSON.parse(word)});
+    console.log({ isSuccess: true, data: word });
+    return res.status(200).json({ isSuccess: true, data: word});
 }
 
 module.exports.setWords = async (req, res) => { 
