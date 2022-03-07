@@ -20,7 +20,10 @@ mongoose.connect(process.env.MONGO_URI, {
     .catch(err => console.log(err))
 
 
-app.use(cors())    
+app.use(cors({
+    origin: "*",
+    credentials: true
+}))    
 app.use(express.json())
 app.use("/word", wordRouter);
 app.use("/game", gameRouter);
